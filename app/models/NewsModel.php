@@ -166,4 +166,11 @@ class NewsModel {
         $stmt->bindParam(':id', $newsId, PDO::PARAM_INT);
         $stmt->execute();
     }
+    public function getBanners() {
+    $query = "SELECT * FROM banners WHERE status = 'active' ORDER BY priority DESC";
+    $stmt = $this->db->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }
