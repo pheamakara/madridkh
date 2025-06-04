@@ -43,10 +43,3 @@ CREATE TABLE IF NOT EXISTS `news_tags` (
   FOREIGN KEY (`news_id`) REFERENCES `news`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`tag_id`) REFERENCES `tags`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- Add category_id to news table (if not already exists)
-ALTER TABLE `news` ADD COLUMN `category_id` INT NOT NULL AFTER `featured_image`;
-ALTER TABLE `news` ADD CONSTRAINT `fk_news_category` FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`);
-
--- Add views column to news table
-ALTER TABLE `news` ADD COLUMN `views` INT DEFAULT 0 AFTER `published_at`;
