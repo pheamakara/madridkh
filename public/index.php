@@ -1,6 +1,6 @@
 <?php
 define('BASE_PATH', dirname(__DIR__)); // Absolute base path for the project
-
+require_once BASE_PATH . '/config/paths.php';
 require_once BASE_PATH . '/app/core/Router.php';
 require_once BASE_PATH . '/app/core/Database.php';
 
