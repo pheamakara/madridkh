@@ -51,7 +51,7 @@ class Router {
     }
     
     private function callAction($controller, $action, $params = []) {
-        require_once "app/controllers/{$controller}.php";
+        require_once __DIR__ . '/../controllers/HomeController.php';
         $controllerInstance = new $controller();
         call_user_func_array([$controllerInstance, $action], $params);
     }
