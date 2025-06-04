@@ -4,8 +4,8 @@ class HomeController {
     private $fixtureModel;
     
     public function __construct() {
-        require_once 'app/models/NewsModel.php';
-        require_once 'app/models/FixtureModel.php';
+        require_once __DIR__ . '/../models/NewsModel.php';
+        require_once __DIR__ . '/../models/FixtureModel.php';
         $this->newsModel = new NewsModel();
         $this->fixtureModel = new FixtureModel();
     }
@@ -18,7 +18,7 @@ class HomeController {
             'leagueTable' => $this->fixtureModel->getLeagueTable(5)
         ];
         
-        require_once 'app/views/layouts/main.php';
-        require_once 'app/views/home/index.php';
+        require_once __DIR__ . '/../views/layouts/main.php';
+        require_once __DIR__ . '/../views/home/index.php';
     }
 }

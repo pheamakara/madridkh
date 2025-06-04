@@ -1,6 +1,8 @@
 <?php
-require_once '../app/core/Router.php';
-require_once '../app/core/Database.php';
+define('BASE_PATH', dirname(__DIR__)); // Absolute base path for the project
+
+require_once BASE_PATH . '/app/core/Router.php';
+require_once BASE_PATH . '/app/core/Database.php';
 
 // Setup routes
 $router = new Router();
@@ -30,7 +32,6 @@ $router->addRoute('/contact', 'ContactController', 'POST', 'store');
 
 // Admin routes
 $router->addRoute('/admin', 'AdminController', 'GET', 'dashboard');
-// Add more admin routes as needed
 
 // Dispatch the request
 $requestUrl = $_SERVER['REQUEST_URI'];
