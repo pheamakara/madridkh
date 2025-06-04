@@ -1,5 +1,5 @@
 <?php
-require_once ROOT_PATH . '/config/paths.php';
+require_once ROOT_PATH . '/../config/paths.php'; 
 require_once CORE_PATH . '/Database.php';
 
 class NewsModel {
