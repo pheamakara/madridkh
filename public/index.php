@@ -1,85 +1,39 @@
 <?php
-session_start();
+require_once '../app/core/Router.php';
+require_once '../app/core/Database.php';
 
-// Simple language switcher via GET param
-if (isset($_GET['lang'])) {
-    $_SESSION['lang'] = $_GET['lang'];
-}
-$lang = $_SESSION['lang'] ?? 'en';
+// Setup routes
+$router = new Router();
 
-// Load translations
-$langData = [];
-if ($lang === 'km') {
-    $langData = include __DIR__ . '/../lang/km.php';
-} else {
-    $langData = include __DIR__ . '/../lang/en.php';
-}
+// Home routes
+$router->addRoute('/', 'HomeController', 'GET', 'index');
 
-function t($key) {
-    global $langData;
-    return $langData[$key] ?? $key;
-}
+// News routes
+$router->addRoute('/news', 'NewsController', 'GET', 'index');
+$router->addRoute('/news/category/:id', 'NewsController', 'GET', 'category');
+$router->addRoute('/news/:id', 'NewsController', 'GET', 'show');
 
-?>
-<!DOCTYPE html>
-<html lang="<?php echo htmlspecialchars($lang); ?>" class="scroll-smooth bg-gray-900 text-gray-100">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title><?php echo t('site_title'); ?></title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Add dark mode toggle or extra styling here */
-    </style>
-</head>
-<body class="min-h-screen flex flex-col">
+// Match routes
+$router->addRoute('/match', 'MatchController', 'GET', 'index');
+$router->addRoute('/match/:id', 'MatchController', 'GET', 'show');
 
-    <!-- Header -->
-    <header class="bg-gray-800 p-4 flex justify-between items-center shadow-lg">
-        <div class="text-xl font-bold"><?php echo t('site_title'); ?></div>
-        <nav>
-            <a href="?lang=en" class="mr-4 hover:underline <?php echo $lang==='en' ? 'font-semibold' : ''; ?>">English</a>
-            <a href="?lang=km" class="hover:underline <?php echo $lang==='km' ? 'font-semibold' : ''; ?>">ខ្មែរ</a>
-        </nav>
-    </header>
+// Team routes
+$router->addRoute('/team', 'TeamController', 'GET', 'index');
+$router->addRoute('/player/:id', 'TeamController', 'GET', 'player');
 
-    <div class="flex flex-1 overflow-hidden">
+// About route
+$router->addRoute('/about', 'AboutController', 'GET', 'index');
 
-        <!-- Sidebar -->
-        <aside class="w-64 bg-gray-800 p-4 hidden md:block">
-            <ul class="space-y-4">
-                <li><a href="#" class="block px-3 py-2 rounded hover:bg-gray-700"><?php echo t('nav_home'); ?></a></li>
-                <li><a href="#" class="block px-3 py-2 rounded hover:bg-gray-700"><?php echo t('nav_about'); ?></a></li>
-                <li><a href="#" class="block px-3 py-2 rounded hover:bg-gray-700"><?php echo t('nav_contact'); ?></a></li>
-            </ul>
-        </aside>
+// Contact routes
+$router->addRoute('/contact', 'ContactController', 'GET', 'index');
+$router->addRoute('/contact', 'ContactController', 'POST', 'store');
 
-        <!-- Main content -->
-        <main class="flex-1 p-6 overflow-auto">
-            <h1 class="text-3xl font-extrabold mb-6"><?php echo t('welcome_message'); ?></h1>
+// Admin routes
+$router->addRoute('/admin', 'AdminController', 'GET', 'dashboard');
+// Add more admin routes as needed
 
-            <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-gray-700 rounded-lg p-4 shadow-md">
-                    <h2 class="text-xl font-semibold mb-2"><?php echo t('feature_one_title'); ?></h2>
-                    <p><?php echo t('feature_one_desc'); ?></p>
-                </div>
-                <div class="bg-gray-700 rounded-lg p-4 shadow-md">
-                    <h2 class="text-xl font-semibold mb-2"><?php echo t('feature_two_title'); ?></h2>
-                    <p><?php echo t('feature_two_desc'); ?></p>
-                </div>
-                <div class="bg-gray-700 rounded-lg p-4 shadow-md">
-                    <h2 class="text-xl font-semibold mb-2"><?php echo t('feature_three_title'); ?></h2>
-                    <p><?php echo t('feature_three_desc'); ?></p>
-                </div>
-            </section>
-        </main>
+// Dispatch the request
+$requestUrl = $_SERVER['REQUEST_URI'];
+$requestMethod = $_SERVER['REQUEST_METHOD'];
 
-    </div>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-center p-4 text-sm text-gray-400">
-        &copy; <?php echo date('Y'); ?> MadridKH. <?php echo t('footer_rights'); ?>
-    </footer>
-
-</body>
-</html>
+$router->dispatch($requestUrl, $requestMethod);
