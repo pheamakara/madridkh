@@ -113,7 +113,7 @@ class NewsModel {
         error_log("Error getting trending tags: " . $e->getMessage());
         return []; // Return empty array on error
     }
-    
+}
     public function getTotalPages($perPage, $categorySlug = null, $tag = null) {
         $query = "SELECT COUNT(*) AS total 
                   FROM news n
