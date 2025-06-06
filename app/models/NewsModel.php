@@ -95,22 +95,23 @@ class NewsModel {
     }
     
     public function getTrendingTags($limit = 10) {
-        // This could be based on most used tags or manually curated
-        // Here we'll get the most used tags in the last 30 days
+    try {
         $query = "SELECT t.id, t.name, t.slug, COUNT(nt.news_id) AS news_count
-                  FROM tags t
-                  JOIN news_tags nt ON t.id = nt.tag_id
-                  JOIN news n ON nt.news_id = n.id
-                  WHERE n.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-                  GROUP BY t.id
-                  ORDER BY news_count DESC
-                  LIMIT :limit";
+                FROM tags t
+                LEFT JOIN news_tags nt ON t.id = nt.tag_id
+                LEFT JOIN news n ON nt.news_id = n.id
+                GROUP BY t.id
+                ORDER BY news_count DESC
+                LIMIT :limit";
         
         $stmt = $this->db->prepare($query);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error getting trending tags: " . $e->getMessage());
+        return []; // Return empty array on error
     }
     
     public function getTotalPages($perPage, $categorySlug = null, $tag = null) {
@@ -167,7 +168,7 @@ class NewsModel {
         $stmt->execute();
     }
     public function getBanners() {
-    $query = "SELECT * FROM banners WHERE status = 'active' ORDER BY priority DESC";
+    $query = "SELECT * FROM banners WHERE status = 'active' ORDER BY created_at DESC LIMIT 3";
     $stmt = $this->db->prepare($query);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
